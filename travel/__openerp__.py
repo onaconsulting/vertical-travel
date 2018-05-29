@@ -55,5 +55,5 @@ Contributors
         'demo/travel.xml',
     ],
     'test': [],
-    'installable': False,
+    'installable': True,
 }
