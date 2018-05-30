@@ -6,12 +6,12 @@
       <field name="model">res.partner</field>
       <field name="inherit_id" ref="transportation.view_travel_form"/>
       <field name="arch" type="xml">
-        <page string="Travel" position="inside">
+        <xpath expr="//page" position="inside">
           <group string="Airport">
             <field name="airport" />
             <field name="iata_code"  attrs="{'invisible': [('airport','=',False)]}"/>
           </group>
-        </page>
+        </xpath>
       </field>
     </record>
   </data>

@@ -20,41 +20,45 @@
 #
 ##############################################################################
 
-import logging
 from openerp.report import report_sxw
-from openerp.addons.travel_journey.report import travel_journey_webkit
-
-_logger = logging.getLogger(__name__)
 
 
-class travel_journey_report(travel_journey_webkit.travel_journey_report):
-
+class travel_journey_report(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context=None):
         super(travel_journey_report, self).__init__(
             cr, uid, name, context=context)
         self.localcontext.update({
-            'who': self._get_who,
+            'who': self._get_signer,
+            'signer': self._get_signer,
+            'passenger': self._get_passenger,
         })
 
-    def _get_who(self):
-        cr, uid, context = self.cr, self.uid, self.localcontext
-        employee_pool = self.pool.get('hr.employee')
-        employee_ids = employee_pool.search(
-            cr, uid, [('user_id', '=', uid)], context=context)
+    def _get_signer(self):
         try:
-            return next(
-                employee.department_id.name_get()[0][1]
-                for employee in
-                employee_pool.browse(cr, uid, employee_ids, context=context)
-                if employee.department_id)
-        except (StopIteration, IndexError):
-            _logger.warn('Unable to get department from user. Using name.')
-            return super(travel_journey_report, self)._get_who()
+            return self.localcontext['user'].name_get()[0][1]
+        except (KeyError, IndexError):
+            return ''
+
+    def _get_passenger(self, journey):
+        try:
+            passenger_name = journey.passenger_id.partner_id.name or ''
+        except AttributeError:
+            passenger_name = ''
+        return """\
+      <table width="100%%">
+        <tr>
+          <td class="field_input">
+            %s
+          </td>
+        </tr>
+      </table>
+""" % passenger_name
+
 
 report_sxw.report_sxw(
-    name='report.travel.journey.hr.order.webkit',
+    name='report.travel.journey.order.webkit',
     table='travel.journey',
-    rml='addons/travel_journey/report/travel_passenger.mako',
+    rml='vertical/travel_journey/report/travel_journey.mako',
     parser=travel_journey_report,
     header='external',
 )

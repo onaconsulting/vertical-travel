@@ -44,6 +44,7 @@ Contributors
         'travel',
         'product',  # for product.uom in baggage weight
         'hr',
+        'report_webkit',
     ],
     'data': [
         'views/travel_passenger_view.xml',

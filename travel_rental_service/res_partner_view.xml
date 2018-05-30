@@ -6,13 +6,13 @@
     <field name="inherit_id" ref="transportation.view_travel_form"/>
     <field name="arch" type="xml">
 
-      <page string="Travel" position="inside">
+      <xpath expr="//page" position="inside">
 
         <group string="Rental Service">
           <field name="is_rental_service" />
         </group>
 
-      </page>
+      </xpath>
     </field>
     </record>
   </data>
